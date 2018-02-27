@@ -9,8 +9,8 @@ import random,time,os
 number = ['0','1','2','3','4','5','6','7','8','9']
 alphabet = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z']
 ALPHABET = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z']
-# 验证码一般都无视大小写；验证码长度4个字符
-def random_captcha_text(char_set=number+alphabet+ALPHABET, captcha_size=4):
+# 验证码一般都无视大小写；验证码长度6个字符
+def random_captcha_text(char_set=number+alphabet+ALPHABET, captcha_size=6):
 	captcha_text = []
 	for i in range(captcha_size):
 		c = random.choice(char_set)
@@ -20,17 +20,17 @@ def random_captcha_text(char_set=number+alphabet+ALPHABET, captcha_size=4):
 # 生成字符对应的验证码
 def gen_captcha_text_and_image():
 	image = ImageCaptcha()
+	#image = ImageCaptcha(font_sizes=(42, 50, 56), width=200, height=60)
 
 	captcha_text = random_captcha_text()
 	captcha_text = ''.join(captcha_text)
 
 	captcha = image.generate(captcha_text)
-	#image.write(captcha_text, captcha_text + '.jpg')  # 写到文件
-
+	#captcha = image.write(captcha_text, './sample/' + captcha_text + '.jpg')  # 写到文件
 	#rm  =  'rm '+captcha_text + '.jpg'
 	#print rm
 	#os.system(rm)
-	#time.sleep(10)
+	time.sleep(0.00001)
 
 	captcha_image = Image.open(captcha)
 	captcha_image = np.array(captcha_image)
@@ -40,7 +40,7 @@ if __name__ == '__main__':
 	# 测试
     while(1):
     	text, image = gen_captcha_text_and_image()
-    	print 'begin ',time.ctime(),type(image)
+    	print ('begin ',time.ctime(),type(image))
     	f = plt.figure()
     	ax = f.add_subplot(111)
     	ax.text(0.1, 0.9,text, ha='center', va='center', transform=ax.transAxes)
@@ -48,4 +48,4 @@ if __name__ == '__main__':
 
 
     	plt.show()
-    	print 'end ',time.ctime()
+    	print ('end ',time.ctime())

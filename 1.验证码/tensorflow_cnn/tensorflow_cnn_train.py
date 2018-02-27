@@ -11,9 +11,10 @@ text, image = gen_captcha_text_and_image() #先生成验证码和文字测试模
 print("验证码图像channel:", image.shape)  # (60, 160, 3)
 # 图像大小
 IMAGE_HEIGHT = 60
-IMAGE_WIDTH = 160
+IMAGE_WIDTH = 160 
+#IMAGE_WIDTH = 200 
 MAX_CAPTCHA = len(text)
-print("验证码文本最长字符数", MAX_CAPTCHA)   # 验证码最长4字符; 我全部固定为4,可以不固定. 如果验证码长度小于4，用'_'补齐
+print("验证码文本最长字符数", MAX_CAPTCHA)   # 验证码最长6字符; 我全部固定为4,可以不固定. 如果验证码长度小于6，用'_'补齐
 
 # 把彩色图像转为灰度图像（色彩对识别验证码没有什么用）
 def convert2gray(img):
@@ -97,6 +98,7 @@ def get_next_batch(batch_size=128):
 		while True:
 			text, image = gen_captcha_text_and_image()
 			if image.shape == (60, 160, 3):#此部分应该与开头部分图片宽高吻合
+			#if image.shape == (60, 200, 3):#此部分应该与开头部分图片宽高吻合
 				return text, image
 
 	for i in range(batch_size):
@@ -181,7 +183,7 @@ def train_crack_captcha_cnn():
 		while True:
 			batch_x, batch_y = get_next_batch(64)
 			_, loss_ = sess.run([optimizer, loss], feed_dict={X: batch_x, Y: batch_y, keep_prob: 0.75})
-			print(step, loss_)
+			#print(step, loss_)
 
 			# 每100 step计算一次准确率
 			if step % 100 == 0:
@@ -189,8 +191,8 @@ def train_crack_captcha_cnn():
 				acc = sess.run(accuracy, feed_dict={X: batch_x_test, Y: batch_y_test, keep_prob: 1.})
 				print(step, acc)
 				# 如果准确率大于50%,保存模型,完成训练
-				if acc > 0.5:
-					saver.save(sess, "crack_capcha.model", global_step=step)
+				if acc > 0.9:
+					saver.save(sess, "./crack_capcha/model", global_step=step)
 					break
 			step += 1
 
